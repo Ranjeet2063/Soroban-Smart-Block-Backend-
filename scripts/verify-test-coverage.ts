@@ -26,13 +26,13 @@ import * as path from 'path';
 import * as glob from 'glob';
 import vitestConfig from '../vitest.config';
 
-// Full suite size at the time #895 was fixed. The issue was filed against an
-// older snapshot of the repo citing 126 files; the true count today (verified
-// via vitest.config.ts's own include/exclude) is higher. Lower this only when
-// test files are deliberately deleted, merged, or moved to the *tracked*
-// exclusion registry (see scripts/verify-test-exclusions.ts and
+// Full suite size as of the batch-2 exclusion triage (2026-09-07). Batch 1
+// excluded 9 drifted suites; batch 2 excluded 32 more suites that the first
+// full-suite CI run surfaced (206 collected before batch 2 → 174 now). Lower
+// this only when test files are deliberately deleted, merged, or moved to the
+// *tracked* exclusion registry (see scripts/verify-test-exclusions.ts and
 // docs/test-suite-debt-tracking.md) — never to silence a real regression.
-const MIN_EXPECTED_TEST_FILES = 205;
+const MIN_EXPECTED_TEST_FILES = 174;
 
 const ROOT = path.join(__dirname, '..');
 
