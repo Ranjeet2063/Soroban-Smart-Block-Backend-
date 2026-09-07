@@ -9,7 +9,6 @@ import {
   createStatusIncident,
   updateStatusIncident,
   type SystemIndicator,
-  type StatusIncident,
 } from '../services/status-service';
 
 export const statusRouter = Router();
