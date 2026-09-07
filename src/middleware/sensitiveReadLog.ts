@@ -58,22 +58,36 @@ export function sensitiveReadLog(
       // SensitiveReadAudit table is added via migration 20260828000000_security_issues_888_890.
       // Until `prisma generate` runs against the updated schema the type doesn't appear on the
       // Prisma client, so we access it via the dynamic delegation API. (#890)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (prismaWrite as any).sensitiveReadAudit
-        .create({
-          data: {
-            actor,
-            ip,
-            endpoint,
-            method: req.method,
-            target,
-            requestId,
-            userAgent,
-          },
-        })
-        .catch((err: unknown) =>
-          logger.warn(`[sensitive-read-audit] Failed to persist: ${String(err)}`),
-        );
+      //
+      // Audit logging is best-effort by design: it runs after the response is
+      // sent and must never crash the process or surface as an unhandled
+      // rejection. Guard the access so a missing/partial client (e.g. a
+      // test double that only stubs prismaRead) degrades to a warn log.
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const auditModel = (prismaWrite as any)?.sensitiveReadAudit;
+        if (!auditModel?.create) {
+          logger.warn('[sensitive-read-audit] Skipped: audit client unavailable');
+          return;
+        }
+        auditModel
+          .create({
+            data: {
+              actor,
+              ip,
+              endpoint,
+              method: req.method,
+              target,
+              requestId,
+              userAgent,
+            },
+          })
+          .catch((err: unknown) =>
+            logger.warn(`[sensitive-read-audit] Failed to persist: ${String(err)}`),
+          );
+      } catch (err) {
+        logger.warn(`[sensitive-read-audit] Failed to persist: ${String(err)}`);
+      }
     });
 
     next();
