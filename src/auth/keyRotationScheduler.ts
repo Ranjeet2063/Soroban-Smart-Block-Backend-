@@ -27,6 +27,7 @@ import { invalidateKeyCache } from '../middleware/apiKeyAuth';
 import { logger } from '../logger';
 import { scheduler } from '../scheduler/cron-scheduler';
 
+const HEARTBEAT_ID = 'auth:key-rotation';
 const ROTATION_INTERVAL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 const EXPIRY_CHECK_INTERVAL_MS = 60 * 60 * 1000; // 1 hour
 
