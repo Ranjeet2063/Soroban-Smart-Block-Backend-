@@ -5,6 +5,7 @@ import { config } from '../config';
 import { prismaRead, prismaWrite } from '../db';
 import { createVerifier } from '../verification/verifier';
 import { estimateTemplateCall } from './gas-model';
+import { serializeMetrics } from './meter';
 import { type WasmFunction, type WasmInstr } from '../verification/symbolic-executor';
 import {
   spec,

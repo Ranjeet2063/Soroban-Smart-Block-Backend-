@@ -21,6 +21,9 @@ yarn-error.log*
 
 # Runtime / temp
 node/
+# Local cold-storage archive written by the app's 'local' backend
+# (src/archival) when ARCHIVE_S3_BUCKET is unset.
+data/
 *.bak
 *.tmp
 *.swp

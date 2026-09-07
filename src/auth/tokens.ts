@@ -1,4 +1,4 @@
-import jwt, { SignOptions } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { createHash, randomBytes } from 'crypto';
 import { getOrCreateKeyPair, getKeyPairForKid, getGraceKeyPairs } from './keys';
 import { config } from '../config';
@@ -57,7 +57,9 @@ export async function issueTokens(payload: Omit<TokenPayload, 'jti'>): Promise<T
 
 export async function verifyToken(token: string): Promise<TokenPayload | null> {
   try {
-    const decodedHeader = jwt.decode(token, { complete: true }) as { header: { kid?: string; alg?: string } } | null;
+    const decodedHeader = jwt.decode(token, { complete: true }) as {
+      header: { kid?: string; alg?: string };
+    } | null;
     const kid = decodedHeader?.header?.kid;
     const alg = decodedHeader?.header?.alg;
 
@@ -66,7 +68,12 @@ export async function verifyToken(token: string): Promise<TokenPayload | null> {
       const secrets: string[] = [];
       if (config.jwtSecret) secrets.push(config.jwtSecret);
       if (config.jwtPreviousSecrets) {
-        secrets.push(...config.jwtPreviousSecrets.split(',').map((s) => s.trim()).filter(Boolean));
+        secrets.push(
+          ...config.jwtPreviousSecrets
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean),
+        );
       }
       for (const secret of secrets) {
         try {

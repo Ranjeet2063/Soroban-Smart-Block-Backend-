@@ -5,7 +5,12 @@ import { requireAuth } from '../auth/middleware';
 import { issueTokens, generateSessionId, REFRESH_TOKEN_TTL } from '../auth/tokens';
 import { asyncHandler } from '../middleware/asyncHandler';
 import { uuidv7 } from '../utils/uuidv7';
-import { authRateLimit, checkAccountLockout, recordAccountFailure, clearAccountLockout } from '../auth/bruteForce';
+import {
+  authRateLimit,
+  checkAccountLockout,
+  recordAccountFailure,
+  clearAccountLockout,
+} from '../auth/bruteForce';
 
 export const authOAuth2Router = Router();
 authOAuth2Router.use(authRateLimit);
@@ -122,7 +127,9 @@ authOAuth2Router.post(
       const lock = await checkAccountLockout(client_id);
       if (lock.isLocked) {
         res.setHeader('Retry-After', String(lock.retryAfterSec));
-        return res.status(429).json({ error: 'Client temporarily locked due to failed authentication attempts' });
+        return res
+          .status(429)
+          .json({ error: 'Client temporarily locked due to failed authentication attempts' });
       }
     }
 

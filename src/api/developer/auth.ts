@@ -3,7 +3,12 @@ import { z } from 'zod';
 import crypto from 'crypto';
 import { prismaWrite, prismaRead } from '../../db';
 import { asyncHandler } from '../../middleware/asyncHandler';
-import { authRateLimit, checkAccountLockout, recordAccountFailure, clearAccountLockout } from '../../auth/bruteForce';
+import {
+  authRateLimit,
+  checkAccountLockout,
+  recordAccountFailure,
+  clearAccountLockout,
+} from '../../auth/bruteForce';
 
 export const authRouter = Router();
 authRouter.use(authRateLimit);
@@ -67,7 +72,10 @@ authRouter.post(
     const lock = await checkAccountLockout(email);
     if (lock.isLocked) {
       res.setHeader('Retry-After', String(lock.retryAfterSec));
-      return res.status(429).json({ error: 'Account temporarily locked due to too many failed attempts', retryAfter: lock.retryAfterSec });
+      return res.status(429).json({
+        error: 'Account temporarily locked due to too many failed attempts',
+        retryAfter: lock.retryAfterSec,
+      });
     }
 
     const developer = await prismaRead.developer.findUnique({ where: { email } });

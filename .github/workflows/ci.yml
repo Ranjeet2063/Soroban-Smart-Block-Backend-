@@ -66,13 +66,12 @@ jobs:
       - name: Prisma field reference validator
         run: npm run validate:prisma
 
-      # Verify the Prisma schema is valid and fully materializable on a clean
-      # database. `migrate deploy` is not used here: the migration history is
-      # incomplete (several schema models were never materialized by a
-      # migration), so it fails on every fresh database. `db push` applies the
-      # full schema, which is exactly what this verification step needs.
-      - name: Verify schema (prisma db push)
-        run: npx prisma db push --skip-generate
+      # Verify the migration history applies cleanly on a fresh database
+      # (this is exactly what the docker-compose migrate-* init containers
+      # run before the API/indexer start). The history was squashed into a
+      # single clean baseline so `migrate deploy` must always succeed here.
+      - name: Verify migrations apply (prisma migrate deploy)
+        run: npx prisma migrate deploy
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
           TESTNET_DATABASE_URL: postgresql://test:test@localhost:5432/test

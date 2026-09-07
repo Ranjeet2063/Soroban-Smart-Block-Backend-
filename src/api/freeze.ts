@@ -12,6 +12,7 @@ import { invalidateFreezeCache } from '../indexer/freeze-scanner';
 import { adminAuth } from '../middleware/adminAuth';
 import { uuidv7 } from '../utils/uuidv7';
 import { sensitiveReadLog } from '../middleware/sensitiveReadLog';
+import { asyncHandler } from '../middleware/asyncHandler';
 
 export const freezeRouter = Router();
 
@@ -190,14 +191,7 @@ freezeRouter.patch(
       if (active !== undefined) {
         invalidateFreezeCache();
       }
-      await logAudit(
-        actor,
-        'UPDATE_FREEZE',
-        updated.id,
-        existing,
-        updated,
-        reason || 'Update',
-      );
+      await logAudit(actor, 'UPDATE_FREEZE', updated.id, existing, updated, reason || 'Update');
       await linkIncidentComment(
         incidentId,
         actor,
@@ -302,10 +296,12 @@ freezeRouter.patch(
 
       const actor = getActor(req);
 
-      const existing = await prisma.freezeViolation.findUnique({ where: { id: req.params.id } });
-      if (!existing) return res.status(404).json({ error: 'Violation not found' });
+      const violationEntry = await prisma.freezeViolation.findUnique({
+        where: { id: req.params.id },
+      });
+      if (!violationEntry) return res.status(404).json({ error: 'Violation not found' });
 
-      const updated = await prisma.freezeViolation.update({
+      const updatedViolation = await prisma.freezeViolation.update({
         where: { id: req.params.id },
         data: {
           resolution: parsed.data.resolution,
@@ -316,13 +312,13 @@ freezeRouter.patch(
       await logAudit(
         actor,
         'RESOLVE_VIOLATION',
-        updated.id,
-        existing,
-        updated,
+        updatedViolation.id,
+        violationEntry,
+        updatedViolation,
         parsed.data.reason || 'Resolution updated',
       );
 
-      res.json(updated);
+      res.json(updatedViolation);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

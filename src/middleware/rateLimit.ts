@@ -13,6 +13,30 @@ import {
   TokenBucketResult,
 } from './tokenBucket';
 
+/** Standard rate-limit response headers (RFC 6585 + tier policy headers). */
+export type RateLimitHeaderName =
+  | 'X-RateLimit-Limit'
+  | 'X-RateLimit-Remaining'
+  | 'X-RateLimit-Reset'
+  | 'X-RateLimit-Tier'
+  | 'X-RateLimit-Policy'
+  | 'X-RateLimit-Warn'
+  | 'X-RateLimit-Predicted'
+  | 'Retry-After';
+
+/**
+ * Apply rate-limit headers to a response, skipping undefined/empty values so
+ * caller code can pass conditional headers (e.g. only on 429s) uniformly.
+ */
+export function setRateLimitHeaders(
+  res: Response,
+  headers: Partial<Record<RateLimitHeaderName, string | undefined>>,
+): void {
+  for (const [name, value] of Object.entries(headers)) {
+    if (value !== undefined && value !== '') res.setHeader(name, value);
+  }
+}
+
 /**
  * #715 — API keys must never be stored as plaintext in memory.
  * We hash each raw key with SHA-256 on startup and keep only the digest.

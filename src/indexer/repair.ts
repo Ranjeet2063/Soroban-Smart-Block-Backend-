@@ -15,7 +15,7 @@
  */
 
 import { prismaWrite as prisma } from '../db';
-import { processLedgerRange } from './ledgerProcessor';
+import { processLedgerRange } from './indexer';
 import { config } from '../config';
 import { logger } from '../logger';
 

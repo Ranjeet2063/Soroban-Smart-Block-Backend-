@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
 import { loadEsmNodeFactory } from '../src/p2p';
-import * as fs from 'fs';
 
 vi.mock('../src/logger', () => ({
   logger: {

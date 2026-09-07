@@ -328,7 +328,9 @@ export async function getHealthStatus(detailed = false): Promise<HealthResponse>
     rpc = await checkRpcHealth();
 
     const latestNetworkLedger =
-      rpc.status !== 'unhealthy' && rpc.details ? (rpc.details.latestNetworkLedger as number) : null;
+      rpc.status !== 'unhealthy' && rpc.details
+        ? (rpc.details.latestNetworkLedger as number)
+        : null;
 
     indexer = await checkIndexerHealth(latestNetworkLedger);
     worker = checkWorkerHealth();
@@ -340,12 +342,18 @@ export async function getHealthStatus(detailed = false): Promise<HealthResponse>
     };
 
     // Keep readiness state in sync with detailed probes
-    if (database.status === 'unhealthy') markNotReady('db'); else markReady('db');
-    if (cache.status === 'unhealthy') markNotReady('cache'); else markReady('cache');
-    if (rpc.status === 'unhealthy') markNotReady('rpc'); else markReady('rpc');
-    if (indexer.status === 'unhealthy') markNotReady('indexer'); else markReady('indexer');
-    if (worker.status === 'unhealthy') markNotReady('worker'); else markReady('worker');
-    if (p2p.status === 'unhealthy') markNotReady('p2p'); else markReady('p2p');
+    if (database.status === 'unhealthy') markNotReady('db');
+    else markReady('db');
+    if (cache.status === 'unhealthy') markNotReady('cache');
+    else markReady('cache');
+    if (rpc.status === 'unhealthy') markNotReady('rpc');
+    else markReady('rpc');
+    if (indexer.status === 'unhealthy') markNotReady('indexer');
+    else markReady('indexer');
+    if (worker.status === 'unhealthy') markNotReady('worker');
+    else markReady('worker');
+    if (p2p.status === 'unhealthy') markNotReady('p2p');
+    else markReady('p2p');
   } else {
     // Default health check: derive status from readiness state + cheap signals
     database = {
@@ -372,7 +380,9 @@ export async function getHealthStatus(detailed = false): Promise<HealthResponse>
     p2p = checkP2pHealth(); // cheap, in-memory check
     coldStorage = {
       status: readinessState.coldStorage ? 'healthy' : 'unhealthy',
-      message: readinessState.coldStorage ? 'Cold storage ready (readiness state)' : 'Cold storage not ready',
+      message: readinessState.coldStorage
+        ? 'Cold storage ready (readiness state)'
+        : 'Cold storage not ready',
       lastChecked: new Date().toISOString(),
     };
   }

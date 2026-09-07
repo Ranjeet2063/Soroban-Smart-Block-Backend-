@@ -48,7 +48,7 @@ describe('Health and Readiness dependency set alignment', () => {
       worker: 'worker',
     };
 
-    const mappedReadinessKeys = readinessKeys.map(k => readinessToHealthMap[k] || k).sort();
+    const mappedReadinessKeys = readinessKeys.map((k) => readinessToHealthMap[k] || k).sort();
 
     expect(mappedReadinessKeys).toEqual(healthKeys);
   });
