@@ -30,7 +30,11 @@ concurrency:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  # The GitHub repository name ends with a '-' ("...smart-block-backend-"),
+  # which would make every GHCR tag an invalid reference format (buildx:
+  # "invalid reference format"). Use a fixed, valid image name instead; it is
+  # shared by the build/push job and the kustomize/kubectl deploy jobs.
+  IMAGE_NAME: soroban-smart-block-explorer/soroban-api
 
 jobs:
   build-and-push:

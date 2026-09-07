@@ -52,13 +52,16 @@ jobs:
           key: prisma-${{ hashFiles('prisma/schema.prisma') }}
           restore-keys: prisma-
 
-      # Issue #899: Verify package-lock.json is in sync with package.json.
-      # `npm ci --dry-run` exits non-zero if the lockfile would need updating.
-      - name: Verify package-lock.json is in sync
-        run: npm ci --dry-run
-
       - name: Install dependencies
         run: npm ci
+
+      # Issue #899: Verify package-lock.json is in sync with package.json.
+      # `npm ci --dry-run` exits non-zero if the lockfile would need updating.
+      # Runs AFTER `npm ci` because the dry-run still executes lifecycle
+      # scripts (postinstall → `prisma generate`), which need node_modules to
+      # be present to find the prisma binary.
+      - name: Verify package-lock.json is in sync
+        run: npm ci --dry-run
 
       - name: TypeScript build
         run: npm run build
