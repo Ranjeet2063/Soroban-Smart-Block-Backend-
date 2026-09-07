@@ -294,3 +294,8 @@ router.use('/compliance/commodity', commodityComplianceRouter);
 router.use('/compliance/rwa', rwaComplianceRouter);
 router.use('/compliance/dtcc-settlement', dtccSettlementRouter);
 router.use('/compliance/settlement-batch', settlementBatchRouter);
+
+// ── Public Status Page & Uptime History API (PLT10 / #1031) ─────────────────
+import { statusRouter } from './status';
+router.use('/status', statusRouter);
+
