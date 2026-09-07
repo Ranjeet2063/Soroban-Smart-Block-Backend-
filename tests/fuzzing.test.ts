@@ -16,6 +16,17 @@ vi.mock('../src/db', () => ({
     transaction: {
       findMany: vi.fn().mockResolvedValue([]),
     },
+    fuzzJob: {
+      findUnique: vi.fn().mockResolvedValue(null),
+    },
+  },
+  prismaWrite: {
+    fuzzJob: {
+      create: vi.fn().mockResolvedValue({ id: 'fuzz_auto' }),
+      findMany: vi.fn().mockResolvedValue([]),
+      update: vi.fn().mockResolvedValue({}),
+      updateMany: vi.fn().mockResolvedValue({ count: 0 }),
+    },
   },
 }));
 

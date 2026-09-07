@@ -29,8 +29,9 @@ import vitestConfig from '../vitest.config';
 // Full suite size at the time #895 was fixed. The issue was filed against an
 // older snapshot of the repo citing 126 files; the true count today (verified
 // via vitest.config.ts's own include/exclude) is higher. Lower this only when
-// test files are deliberately deleted or merged — never to silence a real
-// regression.
+// test files are deliberately deleted, merged, or moved to the *tracked*
+// exclusion registry (see scripts/verify-test-exclusions.ts and
+// docs/test-suite-debt-tracking.md) — never to silence a real regression.
 const MIN_EXPECTED_TEST_FILES = 205;
 
 const ROOT = path.join(__dirname, '..');

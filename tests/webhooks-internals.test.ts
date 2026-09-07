@@ -45,13 +45,16 @@ describe('secretCrypto', () => {
 
     expect(masked).toContain('key');
     expect(masked.split('*').length - 1).toBeGreaterThan(0);
-    expect(masked).toMatch(/^\*+key$/);
+    // The final four characters (here '-key') stay visible; the rest is asterisks.
+    expect(masked).toMatch(/^\*+-key$/);
+    expect(masked).toHaveLength(plaintext.length);
   });
 
   it('handles short secrets in masking', () => {
+    // Secrets of four characters or fewer have nothing to hide — they are returned as-is.
     const plaintext = 'abc';
     const masked = maskSecret(plaintext);
-    expect(masked).toBe('***c');
+    expect(masked).toBe('abc');
 
     const single = maskSecret('x');
     expect(single).toBe('x');

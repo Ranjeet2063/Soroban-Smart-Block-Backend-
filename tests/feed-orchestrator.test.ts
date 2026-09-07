@@ -17,6 +17,10 @@ vi.mock('../src/db', () => ({
       upsert: vi.fn(),
       findMany: vi.fn(),
     },
+    feedMessage: {
+      findFirst: vi.fn().mockResolvedValue(null),
+      create: vi.fn(),
+    },
   },
   prismaRead: {
     feedSubscription: {

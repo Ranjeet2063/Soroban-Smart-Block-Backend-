@@ -1,8 +1,10 @@
 import { prismaWrite as prisma } from '../db';
 import { Prisma } from '@prisma/client';
 import { logger } from '../logger';
-import { parseFailureReasonFromString } from './failure-parser';
+import { classifyFailureReason } from './failure-parser';
 import { indexerErrorQueueDepth, indexerErrorRetriesTotal, indexerErrorDlqTotal } from '../metrics';
+
+export { classifyFailureReason };
 
 const MAX_RETRIES = 3;
 const DEFAULT_BATCH_SIZE = 50;
@@ -139,7 +141,7 @@ export async function moveToDeadLetter(dlData: {
   // #912 — dead-letter events are permanent failures; count them by reason so
   // operators can see poison-vs-exhaustion mix and alert on DLQ rate.
   indexerErrorDlqTotal.inc({
-    reason: dlData.reason ?? parseFailureReasonFromString(dlData.errorMsg),
+    reason: dlData.reason ?? classifyFailureReason(dlData.errorMsg),
   });
   await prisma.deadLetterItem.create({
     data: {

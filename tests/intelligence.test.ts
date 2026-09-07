@@ -94,7 +94,8 @@ describe('Intelligence Module', () => {
     });
 
     it('should handle missing WASM analysis gracefully', async () => {
-      const mockAddress = 'CAAA123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789AB';
+      // Distinct address: buildIntelligenceReport caches by address (10-min TTL).
+      const mockAddress = 'CAAA123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789AC';
 
       vi.mocked(analyzeContractWasm).mockResolvedValue(null);
       vi.mocked(classifyContract).mockReturnValue({
@@ -115,7 +116,8 @@ describe('Intelligence Module', () => {
     });
 
     it('should skip LLM when useLlm is false', async () => {
-      const mockAddress = 'CAAA123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789AB';
+      // Distinct address: buildIntelligenceReport caches by address (10-min TTL).
+      const mockAddress = 'CAAA123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789AD';
 
       vi.mocked(analyzeContractWasm).mockResolvedValue({
         address: mockAddress,

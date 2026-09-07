@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { parseWasmSpec } from '../src/indexer/wasm-spec';
+import { CRITICAL_FUNCTIONS } from '../src/indexer/wasm-diff';
 
 // Mock RPC for wasm-spec module
 vi.mock('../src/indexer/rpc', () => ({
@@ -116,8 +117,10 @@ describe('wasm-diff logic', () => {
       'initialize',
     ];
 
+    // Every one of these privileged/state-changing functions must be treated
+    // as critical by the wasm-diff engine.
     for (const fn of criticalFunctions) {
-      expect(['upgrade', 'set_admin', 'transfer_admin', 'mint', 'burn'].includes(fn)).toBe(true);
+      expect(CRITICAL_FUNCTIONS.has(fn)).toBe(true);
     }
   });
 

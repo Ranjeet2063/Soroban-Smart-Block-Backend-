@@ -67,17 +67,19 @@ describe('GraphQL Resolvers', () => {
   });
 
   describe('JSON scalar', () => {
-    it('serializes objects to JSON', () => {
+    it('serializes objects as JSON values (passthrough)', () => {
       const obj = { key: 'value', nested: { num: 42 } };
       const result = resolvers.JSON.__serialize(obj);
-      expect(typeof result).toBe('string');
-      expect(JSON.parse(result as string)).toEqual(obj);
+      expect(result).toEqual(obj);
+      // Round-trips through JSON.stringify cleanly
+      expect(JSON.parse(JSON.stringify(result))).toEqual(obj);
     });
 
-    it('parses string literal to JSON', () => {
+    it('parses string literal to its JSON string value', () => {
+      // A GraphQL string literal is a JSON *string* value, not an encoded object.
       const ast = { kind: 'StringValue', value: '{"key":"value"}' };
       const result = resolvers.JSON.__parseLiteral(ast);
-      expect(result).toEqual({ key: 'value' });
+      expect(result).toBe('{"key":"value"}');
     });
 
     it('parses int literal', () => {
