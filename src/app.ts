@@ -288,7 +288,6 @@ export function createApp(options: AppOptions): express.Express {
   // Public Status Page & Uptime History API (Issue #1031)
   app.use('/status', statusRouter);
 
-
   // P2P indexer network status — peer table, range ownership, recent challenge
   // results (see docs/P2P_INDEXER_DESIGN.md §1.4 dashboard). Reports enabled:false
   // with an empty snapshot on single-node deployments rather than erroring.

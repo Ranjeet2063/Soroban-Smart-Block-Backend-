@@ -9,7 +9,6 @@ import {
   recordHealthSample,
   createStatusIncident,
   updateStatusIncident,
-  getStatusSummary,
   type ComponentStatus,
 } from '../src/services/status-service';
 import { statusRouter } from '../src/api/status';
@@ -37,13 +36,33 @@ vi.mock('../src/health', () => ({
     status: 'healthy',
     timestamp: new Date().toISOString(),
     dependencies: {
-      database: { status: 'healthy', message: 'Database responsive', lastChecked: new Date().toISOString() },
-      cache: { status: 'healthy', message: 'Cache operational', lastChecked: new Date().toISOString() },
+      database: {
+        status: 'healthy',
+        message: 'Database responsive',
+        lastChecked: new Date().toISOString(),
+      },
+      cache: {
+        status: 'healthy',
+        message: 'Cache operational',
+        lastChecked: new Date().toISOString(),
+      },
       rpc: { status: 'healthy', message: 'RPC operational', lastChecked: new Date().toISOString() },
-      indexer: { status: 'healthy', message: 'Indexer operational', lastChecked: new Date().toISOString() },
-      worker: { status: 'healthy', message: 'Workers operational', lastChecked: new Date().toISOString() },
+      indexer: {
+        status: 'healthy',
+        message: 'Indexer operational',
+        lastChecked: new Date().toISOString(),
+      },
+      worker: {
+        status: 'healthy',
+        message: 'Workers operational',
+        lastChecked: new Date().toISOString(),
+      },
       p2p: { status: 'healthy', message: 'P2P operational', lastChecked: new Date().toISOString() },
-      coldStorage: { status: 'healthy', message: 'Cold storage ready', lastChecked: new Date().toISOString() },
+      coldStorage: {
+        status: 'healthy',
+        message: 'Cold storage ready',
+        lastChecked: new Date().toISOString(),
+      },
     },
     system: {
       memory: { rss: 100, heapTotal: 50, heapUsed: 30, external: 10 },
@@ -67,10 +86,7 @@ describe('StatusService Unit Tests', () => {
   };
 
   it('calculates indicator "none" when all components are operational', () => {
-    const components = [
-      { ...baseComponent },
-      { ...baseComponent, id: 'db', name: 'Database' },
-    ];
+    const components = [{ ...baseComponent }, { ...baseComponent, id: 'db', name: 'Database' }];
     const res = calculateSystemIndicator(components);
     expect(res.indicator).toBe('none');
     expect(res.description).toBe('All Systems Operational');

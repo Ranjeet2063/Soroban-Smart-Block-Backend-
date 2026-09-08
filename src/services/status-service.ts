@@ -3,10 +3,7 @@ import { prismaRead } from '../db';
 import { logger } from '../logger';
 
 export type ComponentHealthState =
-  | 'operational'
-  | 'degraded_performance'
-  | 'partial_outage'
-  | 'major_outage';
+  'operational' | 'degraded_performance' | 'partial_outage' | 'major_outage';
 
 export type SystemIndicator = 'none' | 'minor' | 'major' | 'critical';
 
@@ -184,9 +181,7 @@ export function getDailyUptimeHistory(days = 90): HistoricalDay[] {
 
     const dayStart = new Date(dateStr + 'T00:00:00.000Z').getTime();
     const dayEnd = dayStart + 24 * 60 * 60 * 1000;
-    const daySamples = healthSamples.filter(
-      (s) => s.timestamp >= dayStart && s.timestamp < dayEnd,
-    );
+    const daySamples = healthSamples.filter((s) => s.timestamp >= dayStart && s.timestamp < dayEnd);
 
     let uptime = 100.0;
     let status: 'operational' | 'degraded' | 'outage' = 'operational';

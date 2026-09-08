@@ -96,8 +96,7 @@ statusRouter.get(
             ) / 100,
           '90d':
             Math.round(
-              (history.reduce((acc, h) => acc + h.uptimePercentage, 0) / history.length) *
-                100,
+              (history.reduce((acc, h) => acc + h.uptimePercentage, 0) / history.length) * 100,
             ) / 100,
         },
       },

@@ -299,5 +299,3 @@ router.use('/compliance/settlement-batch', settlementBatchRouter);
 
 // ── Public Status Page & Uptime History API (PLT10 / #1031) ─────────────────
 router.use('/status', statusRouter);
-
-
