@@ -184,7 +184,13 @@ statusRouter.post(
       });
     }
 
-    const incident = await createStatusIncident(parsed.data);
+    const incident = await createStatusIncident({
+      title: parsed.data.title,
+      impact: parsed.data.impact,
+      affectedComponents: parsed.data.affectedComponents,
+      message: parsed.data.message,
+      status: parsed.data.status,
+    });
     res.status(201).json({
       success: true,
       data: incident,
@@ -208,7 +214,10 @@ statusRouter.patch(
       });
     }
 
-    const updated = updateStatusIncident(req.params.id, parsed.data);
+    const updated = updateStatusIncident(req.params.id, {
+      status: parsed.data.status,
+      message: parsed.data.message,
+    });
     if (!updated) {
       return res.status(404).json({
         success: false,
